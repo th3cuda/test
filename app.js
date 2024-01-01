@@ -3,11 +3,32 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const { Pool } = require('pg');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// PostgreSQL database connection configuration
+const pool = new Pool({
+  user: 'admin',
+  host: 'localhost',
+  database: 'nxt_ecom',
+  password: '12345678',
+  port: 5432,
+});
+
+// Example query
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error executing query', err);
+  } else {
+    console.log('Result:', res.rows);
+  }
+  // Don't forget to release the pool when done
+  pool.end();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
